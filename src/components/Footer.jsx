@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useToast } from './Toast';
 
 const footerLinks = {
     Product: ['Features', 'Pricing', 'Integrations', 'API', 'Changelog'],
@@ -8,9 +9,95 @@ const footerLinks = {
 };
 
 const Footer = () => {
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { addToast } = useToast();
+
+    const validateEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const handleNewsletterSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!email) {
+            addToast('Please enter your email address', 'error');
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            addToast('Please enter a valid email address', 'error');
+            return;
+        }
+
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+
+        addToast('Thanks for subscribing! Check your inbox for confirmation.', 'success');
+        setEmail('');
+    };
+
     return (
         <footer className="footer">
             <div className="container">
+                {/* Newsletter Section */}
+                <div style={{
+                    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1))',
+                    borderRadius: '24px',
+                    padding: '40px',
+                    marginBottom: '60px',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white', marginBottom: '12px' }}>
+                        Stay in the loop
+                    </h3>
+                    <p style={{ color: '#94a3b8', marginBottom: '24px', maxWidth: '400px', margin: '0 auto 24px' }}>
+                        Get product updates, company news, and more delivered to your inbox.
+                    </p>
+                    <form
+                        onSubmit={handleNewsletterSubmit}
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '12px',
+                            justifyContent: 'center',
+                            maxWidth: '480px',
+                            margin: '0 auto'
+                        }}
+                    >
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
+                            style={{
+                                flex: '1',
+                                minWidth: '200px',
+                                padding: '14px 20px',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                borderRadius: '12px',
+                                color: 'white',
+                                fontSize: '1rem',
+                                outline: 'none'
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            className="btn-primary"
+                            disabled={loading}
+                            style={{ opacity: loading ? 0.7 : 1 }}
+                        >
+                            {loading ? 'Subscribing...' : 'Subscribe'}
+                        </button>
+                    </form>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '16px' }}>
+                        No spam, unsubscribe at any time.
+                    </p>
+                </div>
+
                 <div className="footer-grid">
                     {/* Brand */}
                     <div>
@@ -34,10 +121,15 @@ const Footer = () => {
                             Empowering teams to work smarter with intelligent automation and AI-powered insights.
                         </p>
                         <div style={{ display: 'flex', gap: '12px' }}>
-                            {['T', 'G', 'L'].map((letter) => (
+                            {[
+                                { letter: 'X', label: 'Twitter' },
+                                { letter: 'G', label: 'GitHub' },
+                                { letter: 'L', label: 'LinkedIn' }
+                            ].map((social) => (
                                 <a
-                                    key={letter}
+                                    key={social.letter}
                                     href="#"
+                                    title={social.label}
                                     className="glass"
                                     style={{
                                         width: '40px',
@@ -49,10 +141,10 @@ const Footer = () => {
                                         color: '#94a3b8',
                                         fontSize: '0.875rem',
                                         fontWeight: 600,
-                                        transition: 'color 0.3s ease'
+                                        transition: 'all 0.3s ease'
                                     }}
                                 >
-                                    {letter}
+                                    {social.letter}
                                 </a>
                             ))}
                         </div>
@@ -65,7 +157,7 @@ const Footer = () => {
                             <ul className="footer-links">
                                 {links.map((link) => (
                                     <li key={link}>
-                                        <a href="#">{link}</a>
+                                        <a href={`#${link.toLowerCase()}`}>{link}</a>
                                     </li>
                                 ))}
                             </ul>

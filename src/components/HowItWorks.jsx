@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AuthModal } from './Modal';
 
 const steps = [
     {
@@ -44,61 +45,71 @@ const steps = [
 ];
 
 const HowItWorks = () => {
+    const [authModal, setAuthModal] = useState(false);
+
     return (
-        <section id="how-it-works" className="section">
-            <div className="container">
-                {/* Section Header */}
-                <div className="section-header">
-                    <span className="pill" style={{ marginBottom: '24px' }}>
-                        <svg style={{ width: '16px', height: '16px', color: '#10b981' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                        </svg>
-                        Simple Process
-                    </span>
-                    <h2 className="section-title">
-                        Get started in
-                        <br />
-                        <span className="gradient-text">four easy steps</span>
-                    </h2>
-                    <p className="section-subtitle">
-                        From sign-up to success in minutes. Our streamlined onboarding process
-                        gets you up and running faster than ever.
-                    </p>
-                </div>
+        <>
+            <section id="how-it-works" className="section">
+                <div className="container">
+                    {/* Section Header */}
+                    <div className="section-header">
+                        <span className="pill" style={{ marginBottom: '24px' }}>
+                            <svg style={{ width: '16px', height: '16px', color: '#10b981' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            Simple Process
+                        </span>
+                        <h2 className="section-title">
+                            Get started in
+                            <br />
+                            <span className="gradient-text">four easy steps</span>
+                        </h2>
+                        <p className="section-subtitle">
+                            From sign-up to success in minutes. Our streamlined onboarding process
+                            gets you up and running faster than ever.
+                        </p>
+                    </div>
 
-                {/* Steps Grid */}
-                <div className="steps-grid" style={{ marginTop: '32px' }}>
-                    {steps.map((step, index) => (
-                        <div key={index} className="step-card">
-                            {/* Step Number */}
-                            <div className="step-number">
-                                <span className="gradient-text">{step.number}</span>
+                    {/* Steps Grid */}
+                    <div className="steps-grid" style={{ marginTop: '32px' }}>
+                        {steps.map((step, index) => (
+                            <div key={index} className="step-card">
+                                {/* Step Number */}
+                                <div className="step-number">
+                                    <span className="gradient-text">{step.number}</span>
+                                </div>
+
+                                {/* Icon */}
+                                <div className="step-icon">
+                                    {step.icon}
+                                </div>
+
+                                {/* Content */}
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '12px', color: 'white' }}>
+                                    {step.title}
+                                </h3>
+                                <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>
+                                    {step.description}
+                                </p>
                             </div>
+                        ))}
+                    </div>
 
-                            {/* Icon */}
-                            <div className="step-icon">
-                                {step.icon}
-                            </div>
-
-                            {/* Content */}
-                            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '12px', color: 'white' }}>
-                                {step.title}
-                            </h3>
-                            <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>
-                                {step.description}
-                            </p>
-                        </div>
-                    ))}
+                    {/* Bottom CTA */}
+                    <div style={{ textAlign: 'center', marginTop: '64px' }}>
+                        <button
+                            className="btn-primary"
+                            style={{ fontSize: '1.125rem', padding: '16px 32px' }}
+                            onClick={() => setAuthModal(true)}
+                        >
+                            Start Your Journey
+                        </button>
+                    </div>
                 </div>
+            </section>
 
-                {/* Bottom CTA */}
-                <div style={{ textAlign: 'center', marginTop: '64px' }}>
-                    <button className="btn-primary" style={{ fontSize: '1.125rem', padding: '16px 32px' }}>
-                        Start Your Journey
-                    </button>
-                </div>
-            </div>
-        </section>
+            <AuthModal isOpen={authModal} onClose={() => setAuthModal(false)} mode="signup" />
+        </>
     );
 };
 
