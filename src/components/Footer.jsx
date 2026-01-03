@@ -9,26 +9,50 @@ const footerLinks = {
 
 const Footer = () => {
     return (
-        <footer className="relative border-t border-white/5 pt-20 pb-10">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
+        <footer className="footer">
+            <div className="container">
+                <div className="footer-grid">
                     {/* Brand */}
-                    <div className="lg:col-span-2">
-                        <a href="#" className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet flex items-center justify-center">
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div>
+                        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                            <div style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '12px',
+                                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <svg style={{ width: '24px', height: '24px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <span className="text-xl font-bold text-white">Velox</span>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>Velox</span>
                         </a>
-                        <p className="text-surface-200 mb-6 max-w-xs">
+                        <p style={{ color: '#94a3b8', marginBottom: '24px', maxWidth: '280px', lineHeight: 1.7 }}>
                             Empowering teams to work smarter with intelligent automation and AI-powered insights.
                         </p>
-                        <div className="flex gap-4">
-                            {['twitter', 'github', 'linkedin'].map((social) => (
-                                <a key={social} href="#" className="w-10 h-10 glass rounded-lg flex items-center justify-center text-surface-200 hover:text-white transition-colors">
-                                    <span className="text-xs">{social[0].toUpperCase()}</span>
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            {['T', 'G', 'L'].map((letter) => (
+                                <a
+                                    key={letter}
+                                    href="#"
+                                    className="glass"
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '10px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: '#94a3b8',
+                                        fontSize: '0.875rem',
+                                        fontWeight: 600,
+                                        transition: 'color 0.3s ease'
+                                    }}
+                                >
+                                    {letter}
                                 </a>
                             ))}
                         </div>
@@ -37,13 +61,11 @@ const Footer = () => {
                     {/* Links */}
                     {Object.entries(footerLinks).map(([title, links]) => (
                         <div key={title}>
-                            <h4 className="font-semibold text-white mb-4">{title}</h4>
-                            <ul className="space-y-3">
+                            <h4 style={{ fontWeight: 600, color: 'white', marginBottom: '20px', fontSize: '0.9375rem' }}>{title}</h4>
+                            <ul className="footer-links">
                                 {links.map((link) => (
                                     <li key={link}>
-                                        <a href="#" className="text-surface-200 hover:text-white transition-colors text-sm">
-                                            {link}
-                                        </a>
+                                        <a href="#">{link}</a>
                                     </li>
                                 ))}
                             </ul>
@@ -52,13 +74,27 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom */}
-                <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-surface-200 text-sm">
+                <div style={{
+                    borderTop: '1px solid rgba(255,255,255,0.05)',
+                    paddingTop: '32px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '16px'
+                }}>
+                    <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
                         © 2026 Velox. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-6">
-                        <span className="flex items-center gap-2 text-sm text-surface-200">
-                            <span className="w-2 h-2 bg-accent-emerald rounded-full animate-pulse"></span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{
+                            width: '8px',
+                            height: '8px',
+                            background: '#10b981',
+                            borderRadius: '50%',
+                            animation: 'pulse 2s infinite'
+                        }}></span>
+                        <span style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
                             All systems operational
                         </span>
                     </div>

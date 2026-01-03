@@ -12,40 +12,66 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const navLinks = [
+        { href: '#features', label: 'Features' },
+        { href: '#how-it-works', label: 'How It Works' },
+        { href: '#pricing', label: 'Pricing' },
+        { href: '#testimonials', label: 'Testimonials' },
+    ];
+
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass py-4' : 'py-6'
-            }`}>
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <nav style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            padding: scrolled ? '16px 0' : '24px 0',
+            background: scrolled ? 'rgba(15, 23, 42, 0.8)' : 'transparent',
+            backdropFilter: scrolled ? 'blur(12px)' : 'none',
+            borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none',
+            transition: 'all 0.3s ease'
+        }}>
+            <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {/* Logo */}
-                <a href="#" className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <svg style={{ width: '24px', height: '24px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <span className="text-xl font-bold text-white">Velox</span>
+                    <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>Velox</span>
                 </a>
 
                 {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center gap-8">
-                    <a href="#features" className="nav-link">Features</a>
-                    <a href="#how-it-works" className="nav-link">How It Works</a>
-                    <a href="#pricing" className="nav-link">Pricing</a>
-                    <a href="#testimonials" className="nav-link">Testimonials</a>
+                <div className="desktop-nav" style={{ alignItems: 'center', gap: '32px' }}>
+                    {navLinks.map((link) => (
+                        <a key={link.href} href={link.href} className="nav-link">
+                            {link.label}
+                        </a>
+                    ))}
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="hidden md:flex items-center gap-4">
-                    <button className="btn-secondary py-2 px-6">Sign In</button>
-                    <button className="btn-primary py-2 px-6">Get Started</button>
+                <div className="desktop-nav" style={{ alignItems: 'center', gap: '16px' }}>
+                    <button className="btn-secondary" style={{ padding: '10px 24px' }}>Sign In</button>
+                    <button className="btn-primary" style={{ padding: '10px 24px' }}>Get Started</button>
                 </div>
 
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden text-white p-2"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="mobile-menu-btn"
                 >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {mobileMenuOpen ? (
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         ) : (
@@ -57,15 +83,24 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="md:hidden glass mt-4 mx-6 rounded-2xl p-6 fade-in-up">
-                    <div className="flex flex-col gap-4">
-                        <a href="#features" className="nav-link text-lg">Features</a>
-                        <a href="#how-it-works" className="nav-link text-lg">How It Works</a>
-                        <a href="#pricing" className="nav-link text-lg">Pricing</a>
-                        <a href="#testimonials" className="nav-link text-lg">Testimonials</a>
-                        <div className="pt-4 flex flex-col gap-3">
-                            <button className="btn-secondary w-full">Sign In</button>
-                            <button className="btn-primary w-full">Get Started</button>
+                <div className="container" style={{ marginTop: '16px' }}>
+                    <div className="glass" style={{ borderRadius: '16px', padding: '24px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            {navLinks.map((link) => (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className="nav-link"
+                                    style={{ fontSize: '1.125rem' }}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
+                            <div style={{ paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                <button className="btn-secondary" style={{ width: '100%' }}>Sign In</button>
+                                <button className="btn-primary" style={{ width: '100%' }}>Get Started</button>
+                            </div>
                         </div>
                     </div>
                 </div>
