@@ -100,11 +100,11 @@ const Pricing = () => {
                 </div>
 
                 {/* Pricing Cards */}
-                <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto pt-8">
                     {plans.map((plan, index) => (
                         <div
                             key={index}
-                            className={`pricing-card ${plan.popular ? 'popular' : ''} relative`}
+                            className={`pricing-card ${plan.popular ? 'popular pt-12' : ''} relative`}
                         >
                             {/* Popular Badge */}
                             {plan.popular && (
@@ -150,8 +150,8 @@ const Pricing = () => {
 
                             {/* CTA Button */}
                             <button className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 ${plan.popular
-                                    ? 'btn-primary'
-                                    : 'btn-secondary'
+                                ? 'btn-primary'
+                                : 'btn-secondary'
                                 }`}>
                                 {plan.cta}
                             </button>

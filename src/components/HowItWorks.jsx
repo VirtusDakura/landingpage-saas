@@ -71,11 +71,11 @@ const HowItWorks = () => {
                     {/* Connection Line */}
                     <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent -translate-y-1/2"></div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 pt-8">
                         {steps.map((step, index) => (
                             <div key={index} className="relative group">
                                 {/* Step Card */}
-                                <div className="glass-card p-8 text-center h-full">
+                                <div className="glass-card p-8 pt-10 text-center h-full">
                                     {/* Step Number */}
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 glass px-4 py-1 rounded-full">
                                         <span className="text-sm font-bold gradient-text">{step.number}</span>
