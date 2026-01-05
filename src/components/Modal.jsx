@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from './Toast';
 
 const Modal = ({ isOpen, onClose, children, title }) => {
@@ -84,6 +84,11 @@ export const AuthModal = ({ isOpen, onClose, mode = 'signin' }) => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const { addToast } = useToast();
+
+    // Sync currentMode with the mode prop when it changes
+    useEffect(() => {
+        setCurrentMode(mode);
+    }, [mode, isOpen]);
 
     const validateEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
