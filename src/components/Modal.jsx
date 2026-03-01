@@ -1,83 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useToast } from './Toast';
+import { validateEmail } from '../utils/validation';
 
 const Modal = ({ isOpen, onClose, children, title }) => {
+    const modalRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') { onClose(); return; }
+            if (e.key !== 'Tab') return;
+
+            const modal = modalRef.current;
+            if (!modal) return;
+
+            const focusable = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+            } else {
+                if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        const timer = setTimeout(() => {
+            if (modalRef.current) {
+                const firstInput = modalRef.current.querySelector('input');
+                if (firstInput) firstInput.focus();
+            }
+        }, 100);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            clearTimeout(timer);
+        };
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div
-            style={{
-                position: 'fixed',
-                inset: 0,
-                zIndex: 60,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '24px'
-            }}
+            className="modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? 'modal-title' : undefined}
             onClick={onClose}
         >
-            {/* Backdrop */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(0, 0, 0, 0.7)',
-                backdropFilter: 'blur(8px)'
-            }}></div>
-
-            {/* Modal Content */}
-            <div
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    maxWidth: '440px',
-                    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98))',
-                    borderRadius: '24px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    padding: '32px',
-                    animation: 'modalIn 0.3s ease'
-                }}
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    style={{
-                        position: 'absolute',
-                        top: '16px',
-                        right: '16px',
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#94a3b8',
-                        cursor: 'pointer',
-                        padding: '8px'
-                    }}
-                >
-                    <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="modal-backdrop"></div>
+            <div ref={modalRef} className="modal-content" onClick={e => e.stopPropagation()}>
+                <button className="modal-close" onClick={onClose} aria-label="Close modal">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-
-                {/* Title */}
-                {title && (
-                    <h2 style={{
-                        fontSize: '1.75rem',
-                        fontWeight: 700,
-                        color: 'white',
-                        marginBottom: '24px',
-                        textAlign: 'center'
-                    }}>
-                        {title}
-                    </h2>
-                )}
-
+                {title && <h2 id="modal-title" className="modal-title">{title}</h2>}
                 {children}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
-// Auth Modal Component
 export const AuthModal = ({ isOpen, onClose, mode = 'signin' }) => {
     const [currentMode, setCurrentMode] = useState(mode);
     const [formData, setFormData] = useState({ email: '', password: '', name: '' });
@@ -85,172 +84,82 @@ export const AuthModal = ({ isOpen, onClose, mode = 'signin' }) => {
     const [loading, setLoading] = useState(false);
     const { addToast } = useToast();
 
-    // Sync currentMode with the mode prop when it changes
-    useEffect(() => {
-        setCurrentMode(mode);
-    }, [mode, isOpen]);
+    useEffect(() => { setCurrentMode(mode); }, [mode, isOpen]);
 
-    const validateEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    useEffect(() => {
+        if (!isOpen) { setFormData({ email: '', password: '', name: '' }); setErrors({}); }
+    }, [isOpen]);
 
     const validate = () => {
         const newErrors = {};
-
-        if (!formData.email) {
-            newErrors.email = 'Email is required';
-        } else if (!validateEmail(formData.email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
-
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        } else if (formData.password.length < 8) {
-            newErrors.password = 'Password must be at least 8 characters';
-        }
-
-        if (currentMode === 'signup' && !formData.name) {
-            newErrors.name = 'Name is required';
-        }
-
+        if (!formData.email) newErrors.email = 'Email is required';
+        else if (!validateEmail(formData.email)) newErrors.email = 'Please enter a valid email';
+        if (!formData.password) newErrors.password = 'Password is required';
+        else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+        if (currentMode === 'signup' && !formData.name) newErrors.name = 'Name is required';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!validate()) return;
-
         setLoading(true);
-
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
-
         setLoading(false);
-
-        if (currentMode === 'signin') {
-            addToast('Welcome back! You have signed in successfully.', 'success');
-        } else {
-            addToast('Account created! Welcome to Velox.', 'success');
-        }
-
+        addToast(currentMode === 'signin' ? 'Welcome back! You have signed in successfully.' : 'Account created! Welcome to Velox.', 'success');
         onClose();
-        setFormData({ email: '', password: '', name: '' });
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
-
-    const inputStyle = (hasError) => ({
-        width: '100%',
-        padding: '14px 16px',
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: `1px solid ${hasError ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.1)'}`,
-        borderRadius: '12px',
-        color: 'white',
-        fontSize: '1rem',
-        outline: 'none',
-        transition: 'border-color 0.3s ease'
-    });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={currentMode === 'signin' ? 'Welcome Back' : 'Create Account'}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
                 {currentMode === 'signup' && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', color: '#e2e8f0', fontSize: '0.875rem' }}>
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="John Doe"
-                            style={inputStyle(errors.name)}
-                        />
-                        {errors.name && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>}
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="auth-name">Full Name</label>
+                        <input id="auth-name" type="text" name="name" value={formData.name} onChange={handleChange}
+                            placeholder="John Doe" className={`form-input ${errors.name ? 'error' : ''}`} autoComplete="name" />
+                        {errors.name && <span className="form-error">{errors.name}</span>}
                     </div>
                 )}
-
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#e2e8f0', fontSize: '0.875rem' }}>
-                        Email Address
-                    </label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="you@example.com"
-                        style={inputStyle(errors.email)}
-                    />
-                    {errors.email && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>}
+                <div className="form-group">
+                    <label className="form-label" htmlFor="auth-email">Email Address</label>
+                    <input id="auth-email" type="email" name="email" value={formData.email} onChange={handleChange}
+                        placeholder="you@example.com" className={`form-input ${errors.email ? 'error' : ''}`} autoComplete="email" />
+                    {errors.email && <span className="form-error">{errors.email}</span>}
                 </div>
-
-                <div style={{ marginBottom: '24px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#e2e8f0', fontSize: '0.875rem' }}>
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="••••••••"
-                        style={inputStyle(errors.password)}
-                    />
-                    {errors.password && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.password}</span>}
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                    <label className="form-label" htmlFor="auth-password">Password</label>
+                    <input id="auth-password" type="password" name="password" value={formData.password} onChange={handleChange}
+                        placeholder="••••••••" className={`form-input ${errors.password ? 'error' : ''}`}
+                        autoComplete={currentMode === 'signin' ? 'current-password' : 'new-password'} />
+                    {errors.password && <span className="form-error">{errors.password}</span>}
                 </div>
-
-                <button
-                    type="submit"
-                    className="btn-primary"
-                    disabled={loading}
-                    style={{ width: '100%', padding: '16px', opacity: loading ? 0.7 : 1 }}
-                >
+                <button type="submit" className="btn-primary" disabled={loading}
+                    style={{ width: '100%', padding: '16px', opacity: loading ? 0.7 : 1 }}>
                     {loading ? (
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                            <svg style={{ width: '20px', height: '20px', animation: 'spin 1s linear infinite' }} fill="none" viewBox="0 0 24 24">
-                                <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        <span className="spinner">
+                            <svg fill="none" viewBox="0 0 24 24">
+                                <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                             </svg>
                             Processing...
                         </span>
-                    ) : (
-                        currentMode === 'signin' ? 'Sign In' : 'Create Account'
-                    )}
+                    ) : (currentMode === 'signin' ? 'Sign In' : 'Create Account')}
                 </button>
-
-                <p style={{ textAlign: 'center', marginTop: '24px', color: '#94a3b8', fontSize: '0.875rem' }}>
+                <p className="form-footer">
                     {currentMode === 'signin' ? (
-                        <>
-                            Don't have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={() => setCurrentMode('signup')}
-                                style={{ background: 'transparent', border: 'none', color: '#7f96fa', cursor: 'pointer', fontWeight: 500 }}
-                            >
-                                Sign up
-                            </button>
-                        </>
+                        <>Don't have an account?{' '}
+                            <button type="button" onClick={() => setCurrentMode('signup')} className="form-switch-btn">Sign up</button></>
                     ) : (
-                        <>
-                            Already have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={() => setCurrentMode('signin')}
-                                style={{ background: 'transparent', border: 'none', color: '#7f96fa', cursor: 'pointer', fontWeight: 500 }}
-                            >
-                                Sign in
-                            </button>
-                        </>
+                        <>Already have an account?{' '}
+                            <button type="button" onClick={() => setCurrentMode('signin')} className="form-switch-btn">Sign in</button></>
                     )}
                 </p>
             </form>
@@ -258,126 +167,68 @@ export const AuthModal = ({ isOpen, onClose, mode = 'signin' }) => {
     );
 };
 
-// Demo/Contact Modal Component
 export const DemoModal = ({ isOpen, onClose }) => {
     const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const { addToast } = useToast();
 
-    const validateEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    useEffect(() => {
+        if (!isOpen) { setFormData({ name: '', email: '', company: '', message: '' }); setErrors({}); }
+    }, [isOpen]);
 
     const validate = () => {
         const newErrors = {};
-
         if (!formData.name) newErrors.name = 'Name is required';
-        if (!formData.email) {
-            newErrors.email = 'Email is required';
-        } else if (!validateEmail(formData.email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
+        if (!formData.email) newErrors.email = 'Email is required';
+        else if (!validateEmail(formData.email)) newErrors.email = 'Please enter a valid email';
         if (!formData.company) newErrors.company = 'Company name is required';
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!validate()) return;
-
         setLoading(true);
         await new Promise(resolve => setTimeout(resolve, 1500));
         setLoading(false);
-
         addToast('Demo request submitted! Our team will contact you within 24 hours.', 'success');
         onClose();
-        setFormData({ name: '', email: '', company: '', message: '' });
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
-    const inputStyle = (hasError) => ({
-        width: '100%',
-        padding: '14px 16px',
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: `1px solid ${hasError ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.1)'}`,
-        borderRadius: '12px',
-        color: 'white',
-        fontSize: '1rem',
-        outline: 'none',
-        transition: 'border-color 0.3s ease'
-    });
-
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Schedule a Demo">
-            <p style={{ color: '#94a3b8', textAlign: 'center', marginBottom: '24px', marginTop: '-8px' }}>
-                Get a personalized walkthrough of Velox
-            </p>
-
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '16px' }}>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Your Name"
-                        style={inputStyle(errors.name)}
-                    />
-                    {errors.name && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.name}</span>}
+        <Modal isOpen={isOpen} onClose={onClose} title="Request a Demo">
+            <p className="modal-subtitle">Get a personalized walkthrough of Velox</p>
+            <form onSubmit={handleSubmit} noValidate>
+                <div className="form-group">
+                    <input type="text" name="name" value={formData.name} onChange={handleChange}
+                        placeholder="Your Name" className={`form-input ${errors.name ? 'error' : ''}`} />
+                    {errors.name && <span className="form-error">{errors.name}</span>}
                 </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Work Email"
-                        style={inputStyle(errors.email)}
-                    />
-                    {errors.email && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.email}</span>}
+                <div className="form-group">
+                    <input type="email" name="email" value={formData.email} onChange={handleChange}
+                        placeholder="Work Email" className={`form-input ${errors.email ? 'error' : ''}`} />
+                    {errors.email && <span className="form-error">{errors.email}</span>}
                 </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                    <input
-                        type="text"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleChange}
-                        placeholder="Company Name"
-                        style={inputStyle(errors.company)}
-                    />
-                    {errors.company && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{errors.company}</span>}
+                <div className="form-group">
+                    <input type="text" name="company" value={formData.company} onChange={handleChange}
+                        placeholder="Company Name" className={`form-input ${errors.company ? 'error' : ''}`} />
+                    {errors.company && <span className="form-error">{errors.company}</span>}
                 </div>
-
-                <div style={{ marginBottom: '24px' }}>
-                    <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="Tell us about your needs (optional)"
-                        rows={3}
-                        style={{ ...inputStyle(false), resize: 'vertical', minHeight: '80px' }}
-                    />
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                    <textarea name="message" value={formData.message} onChange={handleChange}
+                        placeholder="Tell us about your needs (optional)" rows={3}
+                        className="form-input" style={{ resize: 'vertical', minHeight: '80px' }} />
                 </div>
-
-                <button
-                    type="submit"
-                    className="btn-primary"
-                    disabled={loading}
-                    style={{ width: '100%', padding: '16px', opacity: loading ? 0.7 : 1 }}
-                >
+                <button type="submit" className="btn-primary" disabled={loading}
+                    style={{ width: '100%', padding: '16px', opacity: loading ? 0.7 : 1 }}>
                     {loading ? 'Submitting...' : 'Request Demo'}
                 </button>
             </form>
