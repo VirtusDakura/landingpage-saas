@@ -5,21 +5,21 @@ import useInView from '../hooks/useInView';
 
 const plans = [
     {
-        name: 'Starter', description: 'Perfect for individuals and small projects',
+        name: 'Free', description: 'Perfect for small meetups and community events',
         monthlyPrice: 0, yearlyPrice: 0,
-        features: ['1,000 automation runs/month', '5 workflow templates', 'Basic analytics', 'Email support', 'API access'],
-        cta: 'Start Free', popular: false,
+        features: ['3 active events', 'Up to 100 attendees/event', 'QR code tickets & check-in', 'Basic analytics', 'Email confirmations', 'Event page with branding'],
+        cta: 'Get Started Free', popular: false,
     },
     {
-        name: 'Professional', description: 'For growing teams that need more power',
+        name: 'Pro', description: 'For growing organizers who need more power',
         monthlyPrice: 49, yearlyPrice: 39,
-        features: ['50,000 automation runs/month', 'Unlimited workflow templates', 'Advanced analytics & AI insights', 'Priority support', 'Team collaboration (up to 10)', 'Custom integrations', 'SSO authentication'],
+        features: ['Unlimited events', 'Up to 5,000 attendees/event', 'Stripe + Paystack + Flutterwave', 'Advanced analytics & funnels', 'Custom forms with conditional logic', 'Promo codes & discounts', 'Email campaigns & reminders', 'Team collaboration (up to 10)', 'Priority support'],
         cta: 'Start Free Trial', popular: true,
     },
     {
-        name: 'Enterprise', description: 'For large organizations with custom needs',
+        name: 'Enterprise', description: 'For organizations with large-scale needs',
         monthlyPrice: 199, yearlyPrice: 159,
-        features: ['Unlimited automation runs', 'Unlimited everything', 'Dedicated success manager', '24/7 phone & chat support', 'Unlimited team members', 'Custom contracts', 'On-premise deployment', 'SLA guarantee'],
+        features: ['Everything in Pro', 'Unlimited attendees', 'Unlimited team members', 'SSO / SAML authentication', 'White-label branding', 'Dedicated account manager', 'Custom integrations & API', 'On-premise deployment option', 'SLA guarantee (99.99%)'],
         cta: 'Contact Sales', popular: false,
     },
 ];
@@ -39,7 +39,7 @@ const Pricing = () => {
 
     const handlePlanSelect = (plan) => {
         if (plan.name === 'Enterprise') {
-            addToast('Our sales team will contact you within 24 hours!', 'info');
+            addToast('Our team will reach out within 24 hours to discuss your needs!', 'info');
         } else {
             openAuth('signup');
         }
@@ -55,14 +55,14 @@ const Pricing = () => {
                         <svg style={{ width: '16px', height: '16px', color: '#ec4899' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Flexible Pricing
+                        No Per-Ticket Fees
                     </span>
                     <h2 className="section-title">
                         Simple, transparent<br />
-                        <span className="gradient-text">pricing for everyone</span>
+                        <span className="gradient-text">pricing that scales with you</span>
                     </h2>
                     <p className="section-subtitle" style={{ marginBottom: '40px' }}>
-                        Choose the plan that fits your needs. All plans include a 14-day free trial.
+                        No hidden fees, no per-ticket charges. Just honest pricing. All plans include a 14-day free trial.
                     </p>
 
                     <div className="billing-toggle">
@@ -111,8 +111,8 @@ const Pricing = () => {
                 </div>
 
                 <p className={`reveal ${isInView ? 'visible' : ''}`} style={{ textAlign: 'center', color: '#94a3b8', marginTop: '48px' }}>
-                    All prices in USD. Taxes may apply.{' '}
-                    <a href="#features" style={{ color: '#7f96fa' }}>View full comparison</a>
+                    All prices in USD. Payment gateway fees (Stripe ~2.9%, Paystack ~1.5%) are passed through transparently.{' '}
+                    <a href="#features" style={{ color: '#7f96fa' }}>Compare all features</a>
                 </p>
             </div>
         </section>

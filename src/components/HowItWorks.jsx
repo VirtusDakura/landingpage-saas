@@ -3,26 +3,26 @@ import useInView from '../hooks/useInView';
 
 const steps = [
     {
-        number: '01', title: 'Create Your Account',
-        description: 'Sign up in seconds with your email or SSO. No credit card required to get started.',
+        number: '01', title: 'Create Your Event',
+        description: 'Set up your event in minutes — add details, branding, schedule, and speakers. Choose from templates or start fresh.',
         icon: (<svg style={{ width: '32px', height: '32px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>),
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>),
     },
     {
-        number: '02', title: 'Connect Your Tools',
-        description: 'Integrate with your favorite apps in one click. We support 200+ popular integrations.',
+        number: '02', title: 'Sell Tickets',
+        description: 'Create multiple ticket types (VIP, Early Bird, Group). Accept payments via Stripe, Paystack, or Flutterwave — no per-ticket fees.',
         icon: (<svg style={{ width: '32px', height: '32px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>),
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>),
     },
     {
-        number: '03', title: 'Build Workflows',
-        description: 'Use our intuitive drag-and-drop builder to create powerful automated workflows.',
+        number: '03', title: 'Check-in Attendees',
+        description: 'Scan QR codes with any phone camera. Works offline. Real-time arrival dashboard keeps you in control at every gate.',
         icon: (<svg style={{ width: '32px', height: '32px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>),
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>),
     },
     {
-        number: '04', title: 'Scale & Grow',
-        description: 'Watch your productivity soar as automation handles the heavy lifting for you.',
+        number: '04', title: 'Analyze & Grow',
+        description: 'Post-event analytics show what worked — registration funnels, revenue breakdown, engagement metrics. Clone your event to run it again.',
         icon: (<svg style={{ width: '32px', height: '32px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>),
     },
@@ -43,12 +43,12 @@ const HowItWorks = () => {
                         Simple Process
                     </span>
                     <h2 className="section-title">
-                        Get started in<br />
-                        <span className="gradient-text">four easy steps</span>
+                        From idea to sold-out<br />
+                        <span className="gradient-text">in four easy steps</span>
                     </h2>
                     <p className="section-subtitle">
-                        From sign-up to success in minutes. Our streamlined onboarding process
-                        gets you up and running faster than ever.
+                        Whether it's a 20-person workshop or a 10,000-seat conference,
+                        Velox makes the journey seamless.
                     </p>
                 </div>
 
@@ -68,7 +68,7 @@ const HowItWorks = () => {
                 <div className={`reveal ${isInView ? 'visible' : ''}`} style={{ textAlign: 'center', marginTop: '64px' }}>
                     <button className="btn-primary" style={{ fontSize: '1.125rem', padding: '16px 32px' }}
                         onClick={() => openAuth('signup')}>
-                        Start Your Journey
+                        Create Your First Event — Free
                     </button>
                 </div>
             </div>

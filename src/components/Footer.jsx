@@ -4,10 +4,10 @@ import { validateEmail } from '../utils/validation';
 import useInView from '../hooks/useInView';
 
 const footerLinks = {
-    Product: ['Features', 'Pricing', 'Integrations', 'API', 'Changelog'],
-    Company: ['About', 'Blog', 'Careers', 'Press', 'Partners'],
-    Resources: ['Documentation', 'Help Center', 'Community', 'Templates', 'Webinars'],
-    Legal: ['Privacy', 'Terms', 'Security', 'Cookies', 'GDPR'],
+    Product: ['Features', 'Pricing', 'Integrations', 'API Docs', 'Changelog'],
+    'Use Cases': ['Conferences', 'Meetups', 'Workshops', 'Corporate Events', 'Festivals'],
+    Resources: ['Documentation', 'Help Center', 'Blog', 'Event Planning Guide', 'Webinars'],
+    Company: ['About Us', 'Careers', 'Press', 'Contact', 'Partners'],
 };
 
 const socialLinks = [
@@ -50,7 +50,7 @@ const Footer = () => {
         setLoading(true);
         await new Promise(resolve => setTimeout(resolve, 1000));
         setLoading(false);
-        addToast('Thanks for subscribing! Check your inbox for confirmation.', 'success');
+        addToast('Thanks for subscribing! Check your inbox for event planning tips.', 'success');
         setEmail('');
     };
 
@@ -58,9 +58,9 @@ const Footer = () => {
         <footer className="footer" ref={ref}>
             <div className="container">
                 <div className={`newsletter-section reveal ${isInView ? 'visible' : ''}`}>
-                    <h3 className="newsletter-title">Stay in the loop</h3>
+                    <h3 className="newsletter-title">Level up your event game</h3>
                     <p className="newsletter-subtitle">
-                        Get product updates, company news, and more delivered to your inbox.
+                        Get event planning tips, product updates, and industry insights delivered weekly.
                     </p>
                     <form onSubmit={handleNewsletterSubmit} className="newsletter-form" noValidate>
                         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +70,7 @@ const Footer = () => {
                             {loading ? 'Subscribing...' : 'Subscribe'}
                         </button>
                     </form>
-                    <p className="newsletter-note">No spam, unsubscribe at any time.</p>
+                    <p className="newsletter-note">No spam, unsubscribe at any time. Join 3,000+ organizers.</p>
                 </div>
 
                 <div className={`footer-grid reveal ${isInView ? 'visible' : ''}`}>
@@ -84,7 +84,7 @@ const Footer = () => {
                             <span className="logo-text">Velox</span>
                         </a>
                         <p className="card-description" style={{ marginBottom: '24px', maxWidth: '280px' }}>
-                            Empowering teams to work smarter with intelligent automation and AI-powered insights.
+                            The all-in-one event management platform. Create, manage, and grow your events — from registration to check-in and beyond.
                         </p>
                         <div className="social-links">
                             {socialLinks.map((social) => (
@@ -101,7 +101,7 @@ const Footer = () => {
                             <h4 className="footer-column-title">{title}</h4>
                             <ul className="footer-links">
                                 {links.map((link) => (
-                                    <li key={link}><a href={`#${link.toLowerCase()}`}>{link}</a></li>
+                                    <li key={link}><a href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}>{link}</a></li>
                                 ))}
                             </ul>
                         </div>

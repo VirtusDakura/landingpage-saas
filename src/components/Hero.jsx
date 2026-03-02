@@ -4,19 +4,19 @@ const Hero = () => {
     const { openAuth, openDemo } = useModal();
 
     const stats = [
-        { number: '10K+', label: 'Active Users' },
+        { number: '5,000+', label: 'Events Hosted' },
+        { number: '200K+', label: 'Attendees' },
+        { number: '50+', label: 'Countries' },
         { number: '99.9%', label: 'Uptime' },
-        { number: '150+', label: 'Countries' },
-        { number: '24/7', label: 'Support' },
     ];
 
     const dashboardStats = [
-        { label: 'Revenue', value: '$124,582', change: '+23%' },
-        { label: 'Users', value: '8,429', change: '+18%' },
-        { label: 'Conversion', value: '12.5%', change: '+5%' },
+        { label: 'Registrations', value: '1,847', change: '+24% this week' },
+        { label: 'Revenue', value: '$28,450', change: '+18% this week' },
+        { label: 'Check-in Rate', value: '94.2%', change: '+3% vs last event' },
     ];
 
-    const chartData = [40, 65, 45, 80, 55, 90, 70];
+    const ticketData = [30, 55, 45, 80, 65, 95, 78];
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     return (
@@ -30,32 +30,33 @@ const Hero = () => {
                 <div className="fade-in-up delay-1" style={{ marginBottom: '32px' }}>
                     <span className="pill">
                         <span className="status-dot"></span>
-                        Introducing Velox 2.0 — Now with AI-powered analytics
+                        Trusted by 5,000+ event organizers worldwide
                     </span>
                 </div>
 
                 <h1 className="fade-in-up delay-2 hero-heading">
-                    Build faster with<br />
-                    <span className="gradient-text">intelligent automation</span>
+                    Create unforgettable events<br />
+                    <span className="gradient-text">with effortless management</span>
                 </h1>
 
                 <p className="fade-in-up delay-3 hero-subheading">
-                    Streamline your workflow with our cutting-edge platform. Automate repetitive tasks,
-                    gain actionable insights, and scale your business with confidence.
+                    From registration to check-in, ticketing to analytics — manage every aspect of your
+                    event in one powerful platform. No per-ticket fees. Ever.
                 </p>
 
                 <div className="fade-in-up delay-4 hero-cta-group">
                     <button className="btn-primary" onClick={() => openAuth('signup')}>
-                        Start Free Trial
+                        Create Your Event
                         <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
                     </button>
                     <button className="btn-secondary" onClick={openDemo}>
                         <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Request Demo
+                        Watch Demo
                     </button>
                 </div>
 
@@ -73,7 +74,7 @@ const Hero = () => {
                         <div className="dashboard-inner">
                             <div className="browser-chrome">
                                 <div className="browser-dots"><span></span><span></span><span></span></div>
-                                <div className="browser-url"><span>app.velox.io/dashboard</span></div>
+                                <div className="browser-url"><span>app.velox.io/events/tech-summit-2026</span></div>
                             </div>
                             <div className="dashboard-content">
                                 <div className="dashboard-stats">
@@ -87,11 +88,11 @@ const Hero = () => {
                                 </div>
                                 <div className="dashboard-chart">
                                     <div className="chart-header">
-                                        <div className="chart-title">Analytics Overview</div>
-                                        <div className="glass chart-period">Last 7 days</div>
+                                        <div className="chart-title">Ticket Sales</div>
+                                        <div className="glass chart-period">This week</div>
                                     </div>
                                     <div className="chart-bars">
-                                        {chartData.map((height, idx) => (
+                                        {ticketData.map((height, idx) => (
                                             <div key={days[idx]} className="chart-bar" style={{ height: `${height}%` }}></div>
                                         ))}
                                     </div>
